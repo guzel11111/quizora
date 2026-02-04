@@ -1,0 +1,147 @@
+{% load static %}
+<!doctype html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quizora</title>
+    <meta name="description" content="Quizora — Думаешь, знаешь? Сейчас проверим." />
+    <link rel="stylesheet" href="{% static 'main/landing.css' %}" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <div class="bg-icons" aria-hidden="true">
+      <!-- мозг -->
+      <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"
+        />
+        <path
+          d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"
+        />
+        <path d="M12 3.5v18.5" />
+      </svg>
+
+      <!-- лампочка -->
+      <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z" />
+        <path d="M10 18.5h4v2H10Z" />
+        <path d="M10.5 22h3" />
+      </svg>
+
+      <!-- знак вопроса -->
+      <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"
+        />
+        <circle cx="12" cy="18.5" r="1" />
+      </svg>
+
+      <!-- облако мысли -->
+      <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"
+        />
+        <circle cx="7" cy="20.5" r="0.8" />
+        <circle cx="5.5" cy="22" r="0.5" />
+      </svg>
+
+      <!-- ещё знаки вопроса / лампочки / мозг / облака -->
+      <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"
+        />
+        <circle cx="12" cy="18.5" r="1" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z" />
+        <path d="M10 18.5h4v2H10Z" />
+        <path d="M10.5 22h3" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"
+        />
+        <path
+          d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"
+        />
+        <path d="M12 3.5v18.5" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"
+        />
+        <circle cx="7" cy="20.5" r="0.8" />
+        <circle cx="5.5" cy="22" r="0.5" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"
+        />
+        <circle cx="12" cy="18.5" r="1" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z" />
+        <path d="M10 18.5h4v2H10Z" />
+        <path d="M10.5 22h3" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"
+        />
+        <path
+          d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"
+        />
+        <path d="M12 3.5v18.5" />
+      </svg>
+
+      <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"
+        />
+        <circle cx="7" cy="20.5" r="0.8" />
+        <circle cx="5.5" cy="22" r="0.5" />
+      </svg>
+    </div>
+
+    <header class="topbar">
+      <div class="brand" aria-label="Quizora">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <span class="brand__name">Quizora</span>
+      </div>
+
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+        <span class="theme-toggle__track" aria-hidden="true">
+          <span class="theme-toggle__thumb" aria-hidden="true"></span>
+        </span>
+        <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+      </button>
+    </header>
+
+    <main class="hero" role="main">
+      <section class="card" aria-label="Вход в Quizora">
+        <h1 class="title">Quizora</h1>
+        <p class="tagline">Думаешь, знаешь? Сейчас проверим</p>
+
+        <div class="actions" role="group" aria-label="Действия">
+          <a class="btn btn--primary" href="{% url 'main:login' %}" aria-label="Войти">Вход</a>
+          <a class="btn btn--secondary" href="{% url 'main:register' %}" aria-label="Зарегистрироваться">Регистрация</a>
+        </div>
+
+        <p class="hint">
+          Баллы, ударный режим, темы и сборные квизы — дальше будет интересно.
+        </p>
+      </section>
+    </main>
+
+    <script src="{% static 'main/landing.js' %}" defer></script>
+  </body>
+</html>
+

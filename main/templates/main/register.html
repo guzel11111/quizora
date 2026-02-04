@@ -1,0 +1,76 @@
+{% load static form_extras %}
+<!doctype html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Регистрация — Quizora</title>
+    <link rel="stylesheet" href="{% static 'main/landing.css' %}" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+    <div class="bg-icons" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand" aria-label="Quizora">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <a href="{% url 'main:landing' %}" class="brand__name-link">
+          <span class="brand__name">Quizora</span>
+        </a>
+      </div>
+
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+        <span class="theme-toggle__track" aria-hidden="true">
+          <span class="theme-toggle__thumb" aria-hidden="true"></span>
+        </span>
+        <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+      </button>
+    </header>
+
+    <main class="hero" role="main">
+      <section class="card card--auth" aria-label="Регистрация в Quizora">
+        <h1 class="title title--small">Регистрация</h1>
+        <p class="tagline">Создай профиль, чтобы копить баллы и серии.</p>
+
+        <form method="post" class="auth-form" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="auth-form__error-list">
+              {% for error in form.non_field_errors %}
+                <p class="auth-form__error">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% for field in form %}
+            <div class="auth-form__field">
+              <label for="{{ field.id_for_label }}" class="auth-form__label">
+                {{ field.label }}
+              </label>
+              {{ field|add_class:"auth-form__input" }}
+
+              {% if field.errors %}
+                <div class="auth-form__field-errors">
+                  {% for error in field.errors %}
+                    <p class="auth-form__error">{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <button type="submit" class="btn btn--primary auth-form__submit">Создать аккаунт</button>
+        </form>
+
+        <p class="auth-switch">
+          Уже есть аккаунт?
+          <a href="{% url 'main:login' %}">Войти</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="{% static 'main/landing.js' %}" defer></script>
+  </body>
+</html>
+

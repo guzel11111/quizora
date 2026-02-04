@@ -1,0 +1,69 @@
+{% load static form_extras %}
+<!doctype html>
+<html lang="ru" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вход — Quizora</title>
+    <link rel="stylesheet" href="{% static 'main/landing.css' %}" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+    <div class="bg-icons" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand" aria-label="Quizora">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <a href="{% url 'main:landing' %}" class="brand__name-link">
+          <span class="brand__name">Quizora</span>
+        </a>
+      </div>
+
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+        <span class="theme-toggle__track" aria-hidden="true">
+          <span class="theme-toggle__thumb" aria-hidden="true"></span>
+        </span>
+        <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+      </button>
+    </header>
+
+    <main class="hero" role="main">
+      <section class="card card--auth" aria-label="Вход в Quizora">
+        <h1 class="title title--small">Вход</h1>
+        <p class="tagline">Возвращайся к своим квизам и сериям.</p>
+
+        <form method="post" class="auth-form" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="auth-form__error-list">
+              {% for error in form.non_field_errors %}
+                <p class="auth-form__error">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="auth-form__field">
+            <label for="{{ form.username.id_for_label }}" class="auth-form__label">Логин</label>
+            {{ form.username|add_class:"auth-form__input" }}
+          </div>
+
+          <div class="auth-form__field">
+            <label for="{{ form.password.id_for_label }}" class="auth-form__label">Пароль</label>
+            {{ form.password|add_class:"auth-form__input" }}
+          </div>
+
+          <button type="submit" class="btn btn--primary auth-form__submit">Войти</button>
+        </form>
+
+        <p class="auth-switch">
+          Нет аккаунта?
+          <a href="{% url 'main:register' %}">Зарегистрироваться</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="{% static 'main/landing.js' %}" defer></script>
+  </body>
+</html>
+
