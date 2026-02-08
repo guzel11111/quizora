@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Неправильные ответы — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <style>
+    .wrong-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 26px 22px 56px;
+      min-height: calc(100vh - 74px);
+    }
+
+    .wrong-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .wrong-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .wrong-subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .category-section {
+      margin-bottom: 40px;
+    }
+
+    .category-name {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+      color: var(--text);
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .question-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-item {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .repeat-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0b0614;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: transform 140ms ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    :root[data-theme="dark"] .repeat-btn {
+      color: #140b24;
+    }
+
+    .repeat-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- Иконки (как на лендинге) -->
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="wrong-container">
+    <div class="wrong-header">
+      <h1 class="wrong-title">Неправильные ответы</h1>
+      <p class="wrong-subtitle">Всего: {{ total_count }} вопросов для повторения</p>
+    </div>
+
+    {% if total_count == 0 %}
+      <div class="empty-message">
+        <svg width="80" height="80" viewBox="0 0 24 24" style="margin: 0 auto 20px; stroke: var(--primary); stroke-width: 2; fill: none;">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+        <p>🎉 Поздравляем! У тебя нет неправильных ответов!</p>
+        <a href="{% url 'main:categories' %}" class="repeat-btn" style="margin-top: 20px;">Начать новый квиз</a>
+      </div>
+    {% else %}
+      {% for category, questions in categories_dict.items %}
+        <div class="category-section">
+          <h2 class="category-name">{{ category }}</h2>
+          <div class="question-list">
+            {% for wa in questions %}
+              <div class="question-item">
+                <p class="question-text">{{ wa.question.text }}</p>
+                <a href="{% url 'main:repeat_wrong_answer' wa.id %}" class="repeat-btn">Повторить вопрос</a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'main:dashboard' %}" class="back-btn">← Вернуться на главную</a>
+  </main>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

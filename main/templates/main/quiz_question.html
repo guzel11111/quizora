@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Квиз — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <style>
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 26px 22px 56px;
+      min-height: calc(100vh - 74px);
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .progress-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .timer {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .question-card {
+      padding: 32px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      margin-bottom: 30px;
+    }
+
+    .question-text {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 24px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .answers-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .answer-btn {
+      padding: 18px 24px;
+      border-radius: 12px;
+      border: 2px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+      text-align: left;
+      width: 100%;
+    }
+
+    .answer-btn:hover {
+      border-color: var(--primary);
+      transform: translateX(5px);
+    }
+
+    .answer-btn.selected {
+      border-color: var(--primary);
+      background: rgba(138, 43, 226, 0.08);
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+    }
+
+    :root[data-theme="dark"] .answer-btn.selected {
+      background: rgba(187, 134, 252, 0.12);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0b0614;
+      padding: 16px 48px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    :root[data-theme="dark"] .submit-btn {
+      color: #140b24;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(138, 43, 226, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- мозг -->
+    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
+      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
+      <path d="M12 3.5v18.5"/>
+    </svg>
+
+    <!-- лампочка -->
+    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
+      <path d="M10 18.5h4v2H10Z"/>
+      <path d="M10.5 22h3"/>
+    </svg>
+
+    <!-- знак вопроса -->
+    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
+      <circle cx="12" cy="18.5" r="1"/>
+    </svg>
+
+    <!-- облако мысли -->
+    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
+      <circle cx="7" cy="20.5" r="0.8"/>
+      <circle cx="5.5" cy="22" r="0.5"/>
+    </svg>
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="quiz-container">
+    <div class="quiz-header">
+      <div class="progress-text">Вопрос {{ current_index }} из {{ total_questions }}</div>
+      <div class="timer" id="timer">{{ question.time_limit }}</div>
+    </div>
+
+    <div class="question-card">
+      <p class="question-text">{{ question.text }}</p>
+
+      <form id="answerForm" method="POST" action="{% url 'main:quiz_submit' %}">
+        {% csrf_token %}
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+        
+        <div class="answers-grid">
+          {% for answer in answers %}
+          <button type="button" class="answer-btn" data-answer-id="{{ answer.id }}">
+            {{ answer.text }}
+          </button>
+          {% endfor %}
+        </div>
+
+        <input type="hidden" name="answer" id="selectedAnswer" value="">
+        
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+          Далее
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Таймер
+    const timerElement = document.getElementById('timer');
+    const timeLimit = {{ question.time_limit }};
+    let timeLeft = timeLimit;
+    let timerInterval;
+    const submitBtn = document.getElementById('submitBtn');
+
+    function updateTimer() {
+      timerElement.textContent = timeLeft;
+      timeLeft--;
+      
+      if (timeLeft < 0) {
+        clearInterval(timerInterval);
+        // Автоматически отправляем без ответа
+        document.getElementById('answerForm').submit();
+      }
+    }
+
+    timerInterval = setInterval(updateTimer, 1000);
+
+    // Обработчик выбора ответа
+    const answerBtns = document.querySelectorAll('.answer-btn');
+    let selectedAnswerId = null;
+
+    answerBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Снимаем выделение со всех
+        answerBtns.forEach(b => b.classList.remove('selected'));
+        // Выделяем выбранный
+        btn.classList.add('selected');
+        selectedAnswerId = btn.dataset.answerId;
+        document.getElementById('selectedAnswer').value = selectedAnswerId;
+        submitBtn.disabled = false;
+      });
+    });
+
+    // Обработчик отправки формы
+    document.getElementById('answerForm').addEventListener('submit', () => {
+      clearInterval(timerInterval);
+    });
+  </script>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отлично! — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <style>
+    .success-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 26px 22px 56px;
+      min-height: calc(100vh - 74px);
+      text-align: center;
+    }
+
+    .success-card {
+      padding: 60px 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+      stroke: #00c853;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .success-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: var(--text);
+    }
+
+    .success-text {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0 0 40px;
+    }
+
+    .success-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0b0614;
+      padding: 16px 48px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 18px;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 140ms ease;
+    }
+
+    :root[data-theme="dark"] .success-btn {
+      color: #140b24;
+    }
+
+    .success-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- Иконки -->
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="success-container">
+    <div class="success-card">
+      <svg class="success-icon" viewBox="0 0 24 24">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+      </svg>
+
+      <h1 class="success-title">Отлично! 🎉</h1>
+      <p class="success-text">Ты правильно ответил на этот вопрос! Он удалён из списка для повторения.</p>
+
+      <a href="{% url 'main:wrong_answers' %}" class="success-btn">Посмотреть другие вопросы</a>
+    </div>
+  </main>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

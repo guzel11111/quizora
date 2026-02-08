@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Повторить вопрос — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <style>
+    .repeat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 26px 22px 56px;
+      min-height: calc(100vh - 74px);
+    }
+
+    .repeat-card {
+      padding: 40px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .repeat-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 24px;
+      color: var(--text);
+    }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 24px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .answers-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .answer-btn {
+      padding: 18px 24px;
+      border-radius: 12px;
+      border: 2px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+      text-align: left;
+      width: 100%;
+    }
+
+    .answer-btn:hover {
+      border-color: var(--primary);
+      transform: translateX(5px);
+    }
+
+    .answer-btn.selected {
+      border-color: var(--primary);
+      background: rgba(138, 43, 226, 0.08);
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+    }
+
+    :root[data-theme="dark"] .answer-btn.selected {
+      background: rgba(187, 134, 252, 0.12);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0b0614;
+      padding: 16px 48px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      transition: transform 140ms ease;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    :root[data-theme="dark"] .submit-btn {
+      color: #140b24;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(138, 43, 226, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-message {
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .result-success {
+      background: rgba(0, 200, 83, 0.15);
+      color: #00c853;
+      border: 2px solid #00c853;
+    }
+
+    .result-error {
+      background: rgba(207, 102, 121, 0.15);
+      color: #cf6679;
+      border: 2px solid #cf6679;
+    }
+  </style>
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- Иконки -->
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="repeat-container">
+    <div class="repeat-card">
+      <h1 class="repeat-title">Повтори вопрос</h1>
+
+      {% if is_correct == False and is_correct is not None %}
+        <div class="result-message result-error">
+          ❌ Неправильно! Попробуй ещё раз.
+        </div>
+      {% endif %}
+
+      <p class="question-text">{{ question.text }}</p>
+
+      <form method="POST" action="{% url 'main:repeat_wrong_answer' wrong_answer_id %}">
+        {% csrf_token %}
+        <div class="answers-grid">
+          {% for answer in answers %}
+          <button type="button" class="answer-btn" data-answer-id="{{ answer.id }}">
+            {{ answer.text }}
+          </button>
+          {% endfor %}
+        </div>
+
+        <input type="hidden" name="answer" id="selectedAnswer" value="">
+        
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+          Проверить ответ
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    const answerBtns = document.querySelectorAll('.answer-btn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    answerBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        answerBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('selectedAnswer').value = btn.dataset.answerId;
+        submitBtn.disabled = false;
+      });
+    });
+  </script>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

@@ -39,53 +39,6 @@
       <circle cx="7" cy="20.5" r="0.8"/>
       <circle cx="5.5" cy="22" r="0.5"/>
     </svg>
-
-    <!-- ещё знаки вопроса / лампочки / мозг / облака -->
-    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
-      <circle cx="12" cy="18.5" r="1"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
-      <path d="M10 18.5h4v2H10Z"/>
-      <path d="M10.5 22h3"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
-      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
-      <path d="M12 3.5v18.5"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
-      <circle cx="7" cy="20.5" r="0.8"/>
-      <circle cx="5.5" cy="22" r="0.5"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
-      <circle cx="12" cy="18.5" r="1"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
-      <path d="M10 18.5h4v2H10Z"/>
-      <path d="M10.5 22h3"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
-      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
-      <path d="M12 3.5v18.5"/>
-    </svg>
-
-    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
-      <circle cx="7" cy="20.5" r="0.8"/>
-      <circle cx="5.5" cy="22" r="0.5"/>
-    </svg>
   </div>
 
   <!-- Хедер с кнопками -->
@@ -119,7 +72,7 @@
   </header>
 
   <!-- Основной контент -->
-  <main class="dashboard" role="main">
+  <main class="dashboard">
     <div class="dashboard-content">
       <h1 class="welcome-text">Привет, {{ request.user.username }}! 👋</h1>
       <p class="welcome-subtext">Готов(а) к новым знаниям?</p>
@@ -131,7 +84,7 @@
           </svg>
           <h2 class="card-title">Начать квиз</h2>
           <p class="card-desc">Проверь свои знания в увлекательных тестах</p>
-          <a href="#" class="card-link">Начать →</a>
+          <a href="{% url 'main:categories' %}" class="card-link">Выбрать категории →</a>
         </div>
 
         <div class="dashboard-card">
@@ -148,9 +101,9 @@
           <svg class="card-icon" viewBox="0 0 24 24">
             <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
           </svg>
-          <h2 class="card-title">Создать квиз</h2>
-          <p class="card-desc">Поделись своими знаниями с другими</p>
-          <a href="#" class="card-link">Создать →</a>
+          <h2 class="card-title">Повторить ошибки</h2>
+          <p class="card-desc">Перепройди вопросы, на которые ответил неправильно</p>
+          <a href="{% url 'main:wrong_answers' %}" class="card-link">Повторить →</a>
         </div>
       </div>
     </div>

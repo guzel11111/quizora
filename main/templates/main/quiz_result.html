@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Результат — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <style>
+    .result-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 26px 22px 56px;
+      min-height: calc(100vh - 74px);
+      text-align: center;
+    }
+
+    .result-card {
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .result-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      stroke: var(--primary);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .result-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .result-score {
+      font-size: 64px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .result-text {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0 0 30px;
+    }
+
+    .result-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .result-btn {
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 140ms ease;
+    }
+
+    .result-btn--primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0b0614;
+    }
+
+    :root[data-theme="dark"] .result-btn--primary {
+      color: #140b24;
+    }
+
+    .result-btn--secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+
+    .result-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- мозг -->
+    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
+      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
+      <path d="M12 3.5v18.5"/>
+    </svg>
+
+    <!-- лампочка -->
+    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
+      <path d="M10 18.5h4v2H10Z"/>
+      <path d="M10.5 22h3"/>
+    </svg>
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="result-container">
+    <div class="result-card">
+      <svg class="result-icon" viewBox="0 0 24 24">
+        {% if percentage >= 80 %}
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        {% elif percentage >= 50 %}
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        {% else %}
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        {% endif %}
+      </svg>
+
+      <h1 class="result-title">Результат</h1>
+      <div class="result-score">{{ score }} / {{ total_questions }}</div>
+      <p class="result-text">Правильно {{ percentage }}%</p>
+
+      <div class="result-buttons">
+        <a href="{% url 'main:categories' %}" class="result-btn result-btn--primary">
+          🎯 Новый квиз
+        </a>
+        <a href="{% url 'main:dashboard' %}" class="result-btn result-btn--secondary">
+          🏠 На главную
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>
