@@ -10,9 +10,15 @@
     .result-container {
       max-width: 600px;
       margin: 0 auto;
-      padding: 26px 22px 56px;
+      padding: 40px 22px;
       min-height: calc(100vh - 74px);
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10;
     }
 
     .result-card {
@@ -22,6 +28,13 @@
       background: var(--card);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 20;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    :root[data-theme="dark"] .result-card {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     .result-icon {
@@ -92,6 +105,36 @@
     .result-btn:hover {
       transform: translateY(-2px);
     }
+
+    /* Контейнер для конфетти на фоне */
+    #confettiContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5; /* Ниже карточки результата */
+    }
+
+    .confetti {
+      position: absolute;
+      opacity: 0;
+      transform-origin: center;
+    }
+
+    .confetti--circle {
+      border-radius: 50%;
+    }
+
+    .confetti--square {
+      transform: rotate(45deg);
+    }
+
+    .confetti--star {
+      font-size: 16px;
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -113,6 +156,9 @@
       <path d="M10.5 22h3"/>
     </svg>
   </div>
+
+  <!-- Контейнер для конфетти (на фоне) -->
+  <div id="confettiContainer"></div>
 
   <!-- Хедер -->
   <header class="dashboard-header">
@@ -149,6 +195,87 @@
       </div>
     </div>
   </main>
+
+  <script>
+    // Проверяем, нужно ли показывать конфетти
+    const showConfetti = {{ show_confetti|lower }};
+    
+    if (showConfetti) {
+      // Ждём немного, чтобы страница загрузилась
+      setTimeout(() => {
+        createConfetti();
+      }, 200);
+    }
+
+    // Функция создания яркого конфетти
+    function createConfetti() {
+      const container = document.getElementById('confettiContainer');
+      
+      // Яркие насыщенные цвета
+      const colors = [
+        '#FF4081', // розовый
+        '#3F51B5', // индиго
+        '#2979FF', // синий
+        '#00E676', // зелёный
+        '#FFEA00', // жёлтый
+        '#FF1744', // красный
+        '#7C4DFF', // фиолетовый
+        '#00BFA5'  // бирюзовый
+      ];
+      
+      // Разные формы
+      const shapes = ['circle', 'square', 'star'];
+      
+      // Создаём 80 ярких конфетти
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          const shape = shapes[Math.floor(Math.random() * shapes.length)];
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          
+          confetti.className = `confetti confetti--${shape}`;
+          
+          if (shape === 'star') {
+            confetti.innerHTML = '✨';
+            confetti.style.color = color;
+          } else {
+            confetti.style.backgroundColor = color;
+            confetti.style.width = `${6 + Math.random() * 8}px`;
+            confetti.style.height = `${6 + Math.random() * 8}px`;
+          }
+          
+          // Случайная позиция сверху экрана
+          const startX = Math.random() * 100;
+          confetti.style.left = `${startX}%`;
+          confetti.style.top = '-30px';
+          
+          container.appendChild(confetti);
+          
+          // Анимация падения с вращением
+          setTimeout(() => {
+            confetti.style.opacity = '1';
+            
+            // Случайная скорость и траектория
+            const duration = 2 + Math.random() * 2; // 2-4 секунды
+            const endX = startX + (Math.random() - 0.5) * 50; // Смещение в стороны
+            const endY = 100 + Math.random() * 30; // Ниже экрана
+            
+            confetti.style.transition = `all ${duration}s cubic-bezier(0.1, 0.9, 0.4, 1)`;
+            confetti.style.transform = `translateX(${endX - startX}%) rotate(${Math.random() * 1080}deg)`;
+            confetti.style.top = `${endY}%`;
+            
+            // Исчезаем в конце пути
+            setTimeout(() => {
+              confetti.style.opacity = '0';
+              setTimeout(() => {
+                confetti.remove();
+              }, 300);
+            }, duration * 800);
+          }, Math.random() * 100);
+        }, i * 25); // Быстрое появление конфетти
+      }
+    }
+  </script>
 
   <script src="{% static 'main/landing.js' %}" defer></script>
 </body>

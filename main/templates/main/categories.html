@@ -41,20 +41,12 @@
     </svg>
   </div>
 
-  <!-- Кнопка назад -->
-  <div class="back-btn-container">
-    <a href="{% url 'main:dashboard' %}" class="back-btn" aria-label="Вернуться в меню">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-      </svg>
-    </a>
-  </div>
 
   <!-- Хедер -->
   <header class="dashboard-header">
     <div class="brand" aria-label="Quizora">
       <span class="brand__dot" aria-hidden="true"></span>
-      <span class="brand__name">Quizora</span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
     </div>
     <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
       <span class="theme-toggle__track" aria-hidden="true">
@@ -138,9 +130,15 @@
     </div>
 
     <!-- Переключатель микса -->
-    <div class="mix-toggle">
-      <input type="checkbox" id="mixToggle" class="mix-checkbox">
-      <label for="mixToggle" class="mix-label">Перемешать выбранные категории</label>
+    <!-- Селектор количества вопросов (компактный) -->
+    <!-- Селектор количества вопросов (минималистичный) -->
+    <div class="question-count-selector">
+      <label class="selector-label">Количество вопросов:</label>
+      <div class="quantity-selector">
+        <button type="button" class="quantity-btn" id="decreaseBtn">&lt;</button>
+        <span class="quantity-value" id="quantityValue">10</span>
+        <button type="button" class="quantity-btn" id="increaseBtn">&gt;</button>
+      </div>
     </div>
 
     <!-- Кнопка начала -->
@@ -155,13 +153,16 @@
   </main>
 
   <script>
-    // Получаем все карточки категорий
+    // Получаем элементы
     const categoryCards = document.querySelectorAll('.category-card');
     const startBtn = document.getElementById('startBtn');
-    const mixToggle = document.getElementById('mixToggle');
+    const quantityValue = document.getElementById('quantityValue');
+    const decreaseBtn = document.getElementById('decreaseBtn');
+    const increaseBtn = document.getElementById('increaseBtn');
     
     let selectedCategories = [];
-
+    let questionCount = 10; // По умолчанию 10 вопросов
+  
     // Обработчик клика по карточке
     categoryCards.forEach(card => {
       card.addEventListener('click', () => {
@@ -174,40 +175,64 @@
           selectedCategories = selectedCategories.filter(c => c !== category);
         }
         
-        // Обновляем кнопку
         updateStartButton();
       });
     });
-
-    // Обновляем состояние кнопки
+  
+    // Уменьшить количество
+    decreaseBtn.addEventListener('click', () => {
+      if (questionCount > 5) {
+        questionCount -= 5;
+        updateQuantityDisplay();
+      }
+    });
+  
+    // Увеличить количество
+    increaseBtn.addEventListener('click', () => {
+      if (questionCount < 30) {
+        questionCount += 5;
+        updateQuantityDisplay();
+      }
+    });
+  
+    // Обновить отображение
+    function updateQuantityDisplay() {
+      quantityValue.textContent = questionCount;
+    }
+  
+    // Обновить кнопку старта — БЕЗ количества вопросов в тексте
     function updateStartButton() {
       if (selectedCategories.length > 0) {
         startBtn.disabled = false;
-        startBtn.innerHTML = selectedCategories.length === 1 
-          ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> Начать квиз'
-          : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> Начать микс (${selectedCategories.length})`;
+        const text = selectedCategories.length === 1 
+          ? 'Начать квиз'
+          : 'Начать микс';
+        
+        startBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 3l14 9-14 9V3z"/>
+          </svg>
+          ${text}
+        `;
       } else {
         startBtn.disabled = true;
-        startBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg> Начать квиз';
+        startBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 3l14 9-14 9V3z"/>
+          </svg>
+          Начать квиз
+        `;
       }
     }
-
+  
     // Обработчик кнопки начала
     startBtn.addEventListener('click', () => {
       if (selectedCategories.length === 0) return;
       
-      const isMix = mixToggle.checked;
       const params = new URLSearchParams();
+      selectedCategories.forEach(cat => params.append('category', cat));
+      params.append('count', questionCount);
       
-      selectedCategories.forEach(cat => {
-        params.append('category', cat);
-      });
-      
-      if (isMix) {
-        params.append('mix', 'true');
-      }
-      
-      // Переходим на страницу квиза
       window.location.href = `/quiz/start/?${params.toString()}`;
     });
   </script>

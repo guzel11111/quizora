@@ -1,0 +1,216 @@
+/* Wrong Answers Page Styles */
+
+body {
+    overflow: auto !important; /* Включаем скролл */
+  }
+  
+  .wrong-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 26px 22px 80px;
+    min-height: calc(100vh - 120px);
+  }
+  
+  /* Хедер */
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  
+  .brand__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    box-shadow: 0 0 0 6px rgba(186, 85, 211, 0.12);
+  }
+  
+  :root[data-theme="dark"] .brand__dot {
+    box-shadow: 0 0 0 6px rgba(187, 134, 252, 0.12);
+  }
+  
+  .brand__name {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    font-size: 18px;
+    color: var(--text);
+  }
+  
+  .theme-toggle {
+    appearance: none;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 140ms ease, border-color 140ms ease;
+  }
+  
+  .theme-toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(138, 43, 226, 0.28);
+  }
+  
+  :root[data-theme="dark"] .theme-toggle:hover {
+    border-color: rgba(187, 134, 252, 0.3);
+  }
+  
+  .theme-toggle:active {
+    transform: translateY(0px);
+  }
+  
+  .theme-toggle__track {
+    width: 46px;
+    height: 26px;
+    border-radius: 999px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.08);
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  :root[data-theme="dark"] .theme-toggle__track {
+    background: rgba(255, 255, 255, 0.12);
+    outline: 1px solid rgba(0, 0, 0, 0.25);
+  }
+  
+  .theme-toggle__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+    transition: transform 180ms ease;
+  }
+  
+  :root[data-theme="dark"] .theme-toggle__thumb {
+    transform: translateX(20px);
+  }
+  
+  .theme-toggle__label {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  
+  
+  /* Заголовок */
+  .wrong-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 20px;
+  }
+  
+  .wrong-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: var(--text);
+  }
+  
+  .wrong-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    margin: 0;
+  }
+  
+  /* Секция категории */
+  .category-section {
+    margin-bottom: 40px;
+  }
+  
+  .category-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    color: var(--text);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
+  }
+  
+  /* Список вопросов */
+  .question-list {
+    display: grid;
+    gap: 16px;
+  }
+  
+  .question-item {
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .question-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  
+  .repeat-btn {
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    color: #0b0614;
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: transform 140ms ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  :root[data-theme="dark"] .repeat-btn {
+    color: #140b24;
+  }
+  
+  .repeat-btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Пустое сообщение */
+  .empty-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  
+
+  
+  /* Мобильная адаптация */
+  @media (max-width: 600px) {
+    .question-list {
+      grid-template-columns: 1fr;
+    }
+  
+    .repeat-btn {
+      width: 100%;
+      max-width: 320px;
+    }
+  }

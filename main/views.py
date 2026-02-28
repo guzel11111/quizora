@@ -42,7 +42,7 @@ def categories(request):
 def quiz_start(request):
     """Страница начала квиза — показывает первый вопрос"""
     categories = request.GET.getlist('category')
-    is_mix = request.GET.get('mix') == 'true'
+    question_count = int(request.GET.get('count', 10))  # ← Получаем количество
     
     if not categories:
         return redirect('main:categories')
@@ -58,12 +58,12 @@ def quiz_start(request):
             'categories': categories
         })
     
-    # Берём случайные 10 вопросов
+    # Берём случайные вопросы (количество из параметра)
     questions_list = list(questions)
     random.shuffle(questions_list)
-    questions_list = questions_list[:10]
+    questions_list = questions_list[:question_count]  # ← Берём именно столько, сколько выбрал пользователь
     
-    # Сохраняем вопросы в сессии
+    # Сохраняем в сессии
     request.session['quiz_questions'] = [q.id for q in questions_list]
     request.session['quiz_current_index'] = 0
     request.session['quiz_score'] = 0
@@ -175,6 +175,7 @@ def quiz_result(request):
         'score': score,
         'total_questions': total_questions,
         'percentage': percentage,
+        'show_confetti': percentage >= 80,
     }
     
     return render(request, "main/quiz_result.html", context)

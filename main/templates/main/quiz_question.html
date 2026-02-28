@@ -10,8 +10,12 @@
     .quiz-container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 26px 22px 56px;
+      padding: 40px 22px;
       min-height: calc(100vh - 74px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     .quiz-header {
@@ -21,6 +25,7 @@
       margin-bottom: 30px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--card-border);
+      width: 100%;
     }
 
     .progress-text {
@@ -42,7 +47,9 @@
       background: var(--card);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      margin-bottom: 30px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .question-text {
@@ -51,11 +58,16 @@
       margin: 0 0 24px;
       color: var(--text);
       line-height: 1.5;
+      word-break: break-word;
     }
 
+    /* Сетка 2x2 для ответов */
     .answers-grid {
       display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
       gap: 16px;
+      margin-bottom: 24px;
     }
 
     .answer-btn {
@@ -67,9 +79,11 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 150ms ease;
+      transition: all 180ms ease;
       text-align: left;
       width: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .answer-btn:hover {
@@ -81,10 +95,116 @@
       border-color: var(--primary);
       background: rgba(138, 43, 226, 0.08);
       box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+      transform: scale(1.02);
     }
 
     :root[data-theme="dark"] .answer-btn.selected {
       background: rgba(187, 134, 252, 0.12);
+    }
+
+    /* Анимация для правильного ответа - СОЛЮТ! */
+    .answer-btn.correct {
+      border-color: #00c853;
+      background: rgba(0, 200, 83, 0.12);
+      box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.25);
+      animation: correctPulse 0.8s ease;
+      position: relative;
+    }
+
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); box-shadow: 0 0 0 12px rgba(0, 200, 83, 0.15); }
+      100% { transform: scale(1); }
+    }
+
+    /* Большой галочка-солют */
+    .correct-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #00c853, #00e676);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0;
+      animation: badgePop 1.2s ease forwards;
+    }
+
+    @keyframes badgePop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+      40% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+      70% { transform: translate(-50%, -50%) scale(0.95); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .correct-badge svg {
+      width: 60px;
+      height: 60px;
+      fill: white;
+      stroke: white;
+      stroke-width: 2;
+    }
+
+    /* Подсветка для неправильного ответа */
+    .answer-btn.incorrect {
+      border-color: #cf6679;
+      background: rgba(207, 102, 121, 0.12);
+      box-shadow: 0 0 0 3px rgba(207, 102, 121, 0.25);
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(0); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* Галочка для правильного ответа */
+    .answer-btn.correct::after {
+      content: "✓";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #00c853;
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Крестик для неправильного ответа */
+    .answer-btn.incorrect::after {
+      content: "✗";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #cf6679;
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* Блокировка после выбора */
+    .answer-btn.locked {
+      cursor: not-allowed;
+      opacity: 0.7;
     }
 
     .submit-btn {
@@ -117,6 +237,18 @@
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
+    }
+
+    /* Анимация конфетти */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00c853;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
     }
   </style>
 </head>
@@ -163,12 +295,12 @@
 
   <!-- Основной контент -->
   <main class="quiz-container">
-    <div class="quiz-header">
-      <div class="progress-text">Вопрос {{ current_index }} из {{ total_questions }}</div>
-      <div class="timer" id="timer">{{ question.time_limit }}</div>
-    </div>
+    <div class="question-card" id="questionCard">
+      <div class="quiz-header">
+        <div class="progress-text">Вопрос {{ current_index }} из {{ total_questions }}</div>
+        <div class="timer" id="timer">{{ question.time_limit }}</div>
+      </div>
 
-    <div class="question-card">
       <p class="question-text">{{ question.text }}</p>
 
       <form id="answerForm" method="POST" action="{% url 'main:quiz_submit' %}">
@@ -177,7 +309,7 @@
         
         <div class="answers-grid">
           {% for answer in answers %}
-          <button type="button" class="answer-btn" data-answer-id="{{ answer.id }}">
+          <button type="button" class="answer-btn" data-answer-id="{{ answer.id }}" data-is-correct="{{ answer.is_correct|lower }}">
             {{ answer.text }}
           </button>
           {% endfor %}
@@ -199,6 +331,7 @@
     let timeLeft = timeLimit;
     let timerInterval;
     const submitBtn = document.getElementById('submitBtn');
+    const questionCard = document.getElementById('questionCard');
 
     function updateTimer() {
       timerElement.textContent = timeLeft;
@@ -216,11 +349,15 @@
     // Обработчик выбора ответа
     const answerBtns = document.querySelectorAll('.answer-btn');
     let selectedAnswerId = null;
+    let isCorrect = false;
 
     answerBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         // Снимаем выделение со всех
-        answerBtns.forEach(b => b.classList.remove('selected'));
+        answerBtns.forEach(b => {
+          b.classList.remove('selected', 'correct', 'incorrect');
+        });
+        
         // Выделяем выбранный
         btn.classList.add('selected');
         selectedAnswerId = btn.dataset.answerId;
@@ -230,9 +367,91 @@
     });
 
     // Обработчик отправки формы
-    document.getElementById('answerForm').addEventListener('submit', () => {
+    document.getElementById('answerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
       clearInterval(timerInterval);
+      
+      // Если не выбран ответ, предотвращаем отправку
+      if (!selectedAnswerId) {
+        return;
+      }
+      
+      // Блокируем все кнопки
+      answerBtns.forEach(btn => {
+        btn.classList.add('locked');
+        btn.disabled = true;
+      });
+      
+      submitBtn.disabled = true;
+      
+      // Проверяем правильность
+      const selectedBtn = document.querySelector(`.answer-btn[data-answer-id="${selectedAnswerId}"]`);
+      isCorrect = selectedBtn.dataset.isCorrect === 'true';
+      
+      // Показываем результат
+      if (isCorrect) {
+        // Правильный ответ - СОЛЮТ!
+        selectedBtn.classList.add('correct');
+        
+        // Создаём большую галочку-солют
+        const badge = document.createElement('div');
+        badge.className = 'correct-badge';
+        badge.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+          </svg>
+        `;
+        questionCard.appendChild(badge);
+        
+        // Создаём конфетти
+        createConfetti();
+        
+        // Задержка 1.5 секунды перед отправкой
+        setTimeout(() => {
+          document.getElementById('answerForm').submit();
+        }, 1500);
+      } else {
+        // Неправильный ответ - просто красная подсветка
+        selectedBtn.classList.add('incorrect');
+        
+        // Задержка 1 секунда перед отправкой
+        setTimeout(() => {
+          document.getElementById('answerForm').submit();
+        }, 1000);
+      }
     });
+
+    // Функция создания конфетти
+    function createConfetti() {
+      const colors = ['#00c853', '#00e676', '#64dd17', '#aeea00'];
+      
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Случайная позиция
+        const posX = Math.random() * window.innerWidth;
+        const posY = questionCard.offsetTop + 100;
+        
+        confetti.style.left = posX + 'px';
+        confetti.style.top = posY + 'px';
+        
+        document.body.appendChild(confetti);
+        
+        // Анимация конфетти
+        setTimeout(() => {
+          confetti.style.opacity = '1';
+          confetti.style.transform = `translate(${(Math.random() - 0.5) * 200}px, ${Math.random() * 300 + 100}px) rotate(${Math.random() * 360}deg)`;
+          confetti.style.transition = 'all 1.2s cubic-bezier(0.1, 0.8, 0.2, 1)';
+          
+          // Удаляем через 1.5 сек
+          setTimeout(() => {
+            confetti.remove();
+          }, 1500);
+        }, i * 30);
+      }
+    }
   </script>
 
   <script src="{% static 'main/landing.js' %}" defer></script>
