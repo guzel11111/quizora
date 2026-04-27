@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мои квизы — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <link rel="stylesheet" href="{% static 'main/my_quizzes.css' %}">
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- мозг -->
+    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
+      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
+      <path d="M12 3.5v18.5"/>
+    </svg>
+
+    <!-- лампочка -->
+    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
+      <path d="M10 18.5h4v2H10Z"/>
+      <path d="M10.5 22h3"/>
+    </svg>
+
+    <!-- знак вопроса -->
+    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
+      <circle cx="12" cy="18.5" r="1"/>
+    </svg>
+
+    <!-- облако мысли -->
+    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
+      <circle cx="7" cy="20.5" r="0.8"/>
+      <circle cx="5.5" cy="22" r="0.5"/>
+    </svg>
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+      <span class="theme-toggle__track" aria-hidden="true">
+        <span class="theme-toggle__thumb" aria-hidden="true"></span>
+      </span>
+      <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+    </button>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="my-quizzes-container">
+    <div class="my-quizzes-header">
+      <h1 class="my-quizzes-title">Мои квизы</h1>
+      <a href="{% url 'main:create_quiz' %}" class="add-quiz-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Создать квиз
+      </a>
+    </div>
+
+    {% if quizzes %}
+      <div class="quizzes-grid">
+        {% for quiz in quizzes %}
+          <div class="quiz-card" data-quiz-id="{{ quiz.id }}" data-quiz-title="{{ quiz.title }}">
+            <div class="quiz-card-header">
+              <h3 class="quiz-title">{{ quiz.title }}</h3>
+              <div class="quiz-badge quiz-badge--{{ quiz.visibility }}">
+                {% if quiz.visibility == 'public' %}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  Публичный
+                {% elif quiz.visibility == 'friends' %}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  Друзьям
+                {% else %}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  Приватный
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="quiz-meta">
+              <div class="quiz-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                {{ quiz.get_question_count }} вопросов
+              </div>
+              <div class="quiz-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {{ quiz.get_category_display }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Панель действий -->
+      <div class="actions-panel" id="actionsPanel">
+        <div class="actions-info">
+          <span id="selectedCount">0</span> выбрано
+        </div>
+        <div class="actions-buttons">
+          <button class="action-btn action-btn--start" id="startBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Начать квиз
+          </button>
+          <button class="action-btn action-btn--edit" id="editBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Редактировать
+          </button>
+          <button class="action-btn action-btn--delete" id="deleteBtn" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+            Удалить
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <svg width="80" height="80" viewBox="0 0 24 24" style="margin: 0 auto 20px; stroke: var(--muted); stroke-width: 2; fill: none;">
+          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <p>У тебя пока нет квизов</p>
+        <a href="{% url 'main:create_quiz' %}" class="add-quiz-btn add-quiz-btn--primary">Создать первый квиз</a>
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Модальное окно подтверждения удаления -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-overlay" onclick="closeDeleteModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Удалить квиз?</h2>
+        <button class="modal-close" onclick="closeDeleteModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="modal-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </div>
+        
+        <p class="modal-text">Квиз "<span id="quizTitleToDelete"></span>" будет удалён безвозвратно. Все вопросы и результаты будут потеряны.</p>
+        
+        <div class="modal-warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12" y2="16"/>
+          </svg>
+          <span>Это действие нельзя отменить</span>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <form id="deleteForm" method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="delete_quiz" value="1">
+          <button type="submit" class="modal-btn modal-btn--delete">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+            Удалить квиз
+          </button>
+        </form>
+        <button class="modal-btn modal-btn--cancel" onclick="closeDeleteModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const quizCards = document.querySelectorAll('.quiz-card');
+      const startBtn = document.getElementById('startBtn');
+      const editBtn = document.getElementById('editBtn');
+      const deleteBtn = document.getElementById('deleteBtn');
+      const selectedCountEl = document.getElementById('selectedCount');
+      const actionsPanel = document.getElementById('actionsPanel');
+      
+      // Модальное окно
+      const deleteModal = document.getElementById('deleteModal');
+      const deleteForm = document.getElementById('deleteForm');
+      const quizTitleToDelete = document.getElementById('quizTitleToDelete');
+      
+      let selectedQuizId = null;
+      let selectedQuizTitle = '';
+      
+      // Обработчик клика по карточке
+      quizCards.forEach(card => {
+        card.addEventListener('click', function() {
+          // Снимаем выделение со всех
+          quizCards.forEach(c => c.classList.remove('selected'));
+          
+          // Выделяем текущую
+          this.classList.add('selected');
+          selectedQuizId = this.dataset.quizId;
+          selectedQuizTitle = this.dataset.quizTitle;
+          
+          // Обновляем состояние кнопок
+          updateButtons();
+        });
+      });
+      
+      // Обновление состояния кнопок
+      function updateButtons() {
+        const isSelected = !!selectedQuizId;
+        
+        startBtn.disabled = !isSelected;
+        editBtn.disabled = !isSelected;
+        deleteBtn.disabled = !isSelected;
+        
+        selectedCountEl.textContent = isSelected ? '1' : '0';
+        
+        // Показываем/скрываем панель
+        if (isSelected) {
+          actionsPanel.style.opacity = '1';
+          actionsPanel.style.transform = 'translateY(0)';
+        } else {
+          actionsPanel.style.opacity = '0';
+          actionsPanel.style.transform = 'translateY(20px)';
+        }
+      }
+      
+      // Обработчики кнопок
+      startBtn.addEventListener('click', function() {
+        if (selectedQuizId) {
+          window.location.href = `/quiz/start/user/${selectedQuizId}/`;
+        }
+      });
+      
+      editBtn.addEventListener('click', function() {
+        if (selectedQuizId) {
+          window.location.href = `/quiz/${selectedQuizId}/edit/`;
+        }
+      });
+      
+      deleteBtn.addEventListener('click', function() {
+        if (selectedQuizId) {
+          // Заполняем модальное окно
+          quizTitleToDelete.textContent = selectedQuizTitle;
+          deleteForm.action = `/quiz/${selectedQuizId}/delete/`;
+          
+          // Показываем модальное окно
+          deleteModal.classList.add('active');
+          document.body.style.overflow = 'hidden'; // Запрещаем скролл
+        }
+      });
+      
+      // Закрытие модального окна
+      window.closeDeleteModal = function() {
+        deleteModal.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Разрешаем скролл
+      };
+      
+      // Закрытие по Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && deleteModal.classList.contains('active')) {
+          closeDeleteModal();
+        }
+      });
+      
+      // Инициализация
+      updateButtons();
+    });
+  </script>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+/* Friends Page Styles */
+
+body {
+    overflow: auto !important;
+  }
+  
+  .friends-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 26px 22px 80px;
+    min-height: calc(100vh - 120px);
+  }
+  
+  /* Хедер */
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  
+  .brand__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    box-shadow: 0 0 0 6px rgba(186, 85, 211, 0.12);
+  }
+  
+  :root[data-theme="dark"] .brand__dot {
+    box-shadow: 0 0 0 6px rgba(187, 134, 252, 0.12);
+  }
+  
+  .brand__name {
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    font-size: 18px;
+    color: var(--text);
+  }
+  
+  .theme-toggle {
+    appearance: none;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 140ms ease, border-color 140ms ease;
+  }
+  
+  .theme-toggle:hover {
+    transform: translateY(-1px);
+    border-color: rgba(138, 43, 226, 0.28);
+  }
+  
+  :root[data-theme="dark"] .theme-toggle:hover {
+    border-color: rgba(187, 134, 252, 0.3);
+  }
+  
+  .theme-toggle:active {
+    transform: translateY(0px);
+  }
+  
+  .theme-toggle__track {
+    width: 46px;
+    height: 26px;
+    border-radius: 999px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.08);
+    outline: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  :root[data-theme="dark"] .theme-toggle__track {
+    background: rgba(255, 255, 255, 0.12);
+    outline: 1px solid rgba(0, 0, 0, 0.25);
+  }
+  
+  .theme-toggle__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+    transition: transform 180ms ease;
+  }
+  
+  :root[data-theme="dark"] .theme-toggle__thumb {
+    transform: translateX(20px);
+  }
+  
+  .theme-toggle__label {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  
+  /* Заголовок */
+  .friends-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  
+  .friends-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+  }
+  
+  .search-friends-btn {
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    color: #0b0614;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: transform 140ms ease, box-shadow 140ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  
+  :root[data-theme="dark"] .search-friends-btn {
+    color: #140b24;
+  }
+  
+  .search-friends-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(138, 43, 226, 0.3);
+  }
+  
+  /* Секция */
+  .section {
+    margin-bottom: 40px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    color: var(--text);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
+  }
+  
+  /* Запросы на дружбу */
+  .requests-list {
+    margin-bottom: 24px;
+  }
+  
+  .requests-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  
+  .request-card {
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+  }
+  
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #0b0614;
+    font-size: 20px;
+    user-select: none;
+  }
+  
+  :root[data-theme="dark"] .user-avatar {
+    color: #140b24;
+  }
+  
+  .user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: var(--text);
+  }
+  
+  .request-date {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+  }
+  
+  .request-actions {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .request-status {
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-badge {
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .status-badge--pending {
+    background: rgba(255, 165, 0, 0.15);
+    color: #ff8c00;
+    border: 1px solid #ff8c00;
+  }
+  
+  .status-badge--accepted {
+    background: rgba(0, 200, 83, 0.15);
+    color: #00c853;
+    border: 1px solid #00c853;
+  }
+  
+  .status-badge--rejected {
+    background: rgba(207, 102, 121, 0.15);
+    color: #cf6679;
+    border: 1px solid #cf6679;
+  }
+  
+  /* Кнопки */
+  .btn {
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: transform 140ms ease, opacity 140ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .btn--accept {
+    background: rgba(0, 200, 83, 0.15);
+    color: #00c853;
+    border: 1px solid #00c853;
+  }
+  
+  .btn--reject {
+    background: rgba(207, 102, 121, 0.15);
+    color: #cf6679;
+    border: 1px solid #cf6679;
+  }
+  
+  .btn--remove {
+    background: rgba(207, 102, 121, 0.15);
+    color: #cf6679;
+    border: 1px solid #cf6679;
+  }
+  
+  .btn--primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    color: #0b0614;
+  }
+  
+  :root[data-theme="dark"] .btn--primary {
+    color: #140b24;
+  }
+  
+  /* Список друзей */
+  .friends-grid {
+    display: grid;
+    gap: 24px;
+  }
+  
+  .friend-card {
+    padding: 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .user-avatar-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #0b0614;
+    font-size: 24px;
+    user-select: none;
+  }
+  
+  :root[data-theme="dark"] .user-avatar-large {
+    color: #140b24;
+  }
+  
+  .friend-info {
+    flex: 1;
+  }
+  
+  .friend-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: var(--text);
+  }
+  
+  .friend-status {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+  }
+  
+  /* Пустое состояние */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 18px;
+  }
+  
+  /* Мобильная адаптация */
+  @media (max-width: 600px) {
+    .friends-header {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+  
+    .search-friends-btn {
+      width: 100%;
+    }
+  
+    .request-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  
+    .request-actions {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    .friend-card {
+      flex-direction: column;
+      text-align: center;
+    }
+  }

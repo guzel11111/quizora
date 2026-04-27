@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактировать квиз — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <link rel="stylesheet" href="{% static 'main/edit_quiz.css' %}">
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- мозг -->
+    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
+      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
+      <path d="M12 3.5v18.5"/>
+    </svg>
+
+    <!-- лампочка -->
+    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
+      <path d="M10 18.5h4v2H10Z"/>
+      <path d="M10.5 22h3"/>
+    </svg>
+
+    <!-- знак вопроса -->
+    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
+      <circle cx="12" cy="18.5" r="1"/>
+    </svg>
+
+    <!-- облако мысли -->
+    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
+      <circle cx="7" cy="20.5" r="0.8"/>
+      <circle cx="5.5" cy="22" r="0.5"/>
+    </svg>
+  </div>
+
+<!-- Хедер -->
+<header class="dashboard-header">
+  <div class="header-left">
+    <a href="{% url 'main:my_quizzes' %}" class="back-btn" aria-label="Вернуться в Мои квизы">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </a>
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+  </div>
+  <div class="header-right">
+    <!-- Темный режим остаётся! -->
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+      <span class="theme-toggle__track" aria-hidden="true">
+        <span class="theme-toggle__thumb" aria-hidden="true"></span>
+      </span>
+      <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+    </button>
+    
+    <!-- Кнопка удаления ВНЕ основной формы -->
+    <form method="post" class="delete-form" onsubmit="return confirm('Удалить квиз? Все вопросы будут удалены!')">
+      {% csrf_token %}
+      <input type="hidden" name="delete_quiz" value="1">
+      <button type="submit" class="delete-btn-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+        Удалить
+      </button>
+    </form>
+  </div>
+</header>
+
+  <!-- Основной контент -->
+  <main class="edit-quiz-container">
+    <div class="edit-quiz-header">
+      <div class="header-left">
+        <h1 class="edit-quiz-title">{{ quiz.title }}</h1>
+        <div class="quiz-badge quiz-badge--{{ quiz.visibility }}">
+          {% if quiz.visibility == 'public' %}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Публичный
+          {% elif quiz.visibility == 'friends' %}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Только друзьям
+          {% else %}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Приватный
+          {% endif %}
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="{% url 'main:delete_quiz' quiz.id %}" class="delete-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+          Удалить квиз
+        </a>
+      </div>
+    </div>
+
+    <!-- Форма редактирования -->
+    <form method="post" class="edit-quiz-form">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="id_title" class="form-label">Название квиза</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+          <div class="form-error">{{ form.title.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Категория</label>
+    
+        <div class="custom-select" data-name="category">
+            <input type="hidden" name="category" value="{{ form.category.value|default:'' }}">
+    
+            <button type="button" class="custom-select__trigger">
+                <span class="custom-select__value">
+                    {% for value, label in form.category.field.choices %}
+                        {% if value == form.category.value %}
+                            {{ label }}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not form.category.value %}Выберите категорию{% endif %}
+                </span>
+                <span class="custom-select__arrow"></span>
+            </button>
+    
+            <div class="custom-select__dropdown">
+                {% for value, label in form.category.field.choices %}
+                    <div class="custom-select__option" data-value="{{ value }}">
+                        {{ label }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    
+        {% if form.category.errors %}
+          <div class="form-error">{{ form.category.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Видимость</label>
+  
+      <div class="custom-select" data-name="visibility">
+          <input type="hidden" name="visibility" value="{{ form.visibility.value|default:'' }}">
+  
+          <button type="button" class="custom-select__trigger">
+              <span class="custom-select__value">
+                  {% for value, label in form.visibility.field.choices %}
+                      {% if value == form.visibility.value %}
+                          {{ label }}
+                      {% endif %}
+                  {% endfor %}
+                  {% if not form.visibility.value %}Выберите видимость{% endif %}
+              </span>
+              <span class="custom-select__arrow"></span>
+          </button>
+  
+          <div class="custom-select__dropdown">
+              {% for value, label in form.visibility.field.choices %}
+                  <div class="custom-select__option" data-value="{{ value }}">
+                      {{ label }}
+                  </div>
+              {% endfor %}
+          </div>
+      </div>
+  
+      {% if form.visibility.errors %}
+        <div class="form-error">{{ form.visibility.errors }}</div>
+      {% endif %}
+  </div>
+
+      <button type="submit" class="save-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Сохранить изменения
+      </button>
+    </form>
+
+    <!-- Добавление вопроса -->
+    <div class="add-question-section">
+      <h2 class="section-title">Вопросы ({{ quiz.questions.count }})</h2>
+      
+      <form method="post" class="add-question-form">
+        {% csrf_token %}
+        <input type="hidden" name="add_question" value="1">
+        
+        <div class="form-group">
+          <label for="id_text" class="form-label">Текст вопроса</label>
+          {{ question_form.text }}
+          {% if question_form.text.errors %}
+            <div class="form-error">{{ question_form.text.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_time_limit" class="form-label">Время на ответ (секунд)</label>
+          {{ question_form.time_limit }}
+          {% if question_form.time_limit.errors %}
+            <div class="form-error">{{ question_form.time_limit.errors }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="add-question-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Добавить вопрос
+        </button>
+      </form>
+    </div>
+
+    <!-- Список вопросов -->
+    {% if quiz.questions.exists %}
+      <div class="questions-list">
+        {% for question in quiz.questions.all|dictsort:"order" %}
+          <div class="question-card">
+            <div class="question-header">
+              <h3 class="question-number">Вопрос {{ forloop.counter }}</h3>
+              <div class="question-actions">
+                <a href="{% url 'main:edit_question' question.id %}" class="question-btn question-btn--edit">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Редактировать
+                </a>
+                <form method="post" style="display: inline;" onsubmit="return confirm('Удалить вопрос?')">
+                  {% csrf_token %}
+                  <input type="hidden" name="delete_question" value="1">
+                  <input type="hidden" name="question_id" value="{{ question.id }}">
+                  <button type="submit" class="question-btn question-btn--delete">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    Удалить
+                  </button>
+                </form>
+              </div>
+            </div>
+            <p class="question-text">{{ question.text }}</p>
+            <div class="question-meta">
+              <span class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {{ question.time_limit }} сек
+              </span>
+              <span class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                {{ question.answers.count }} ответов
+              </span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <svg width="60" height="60" viewBox="0 0 24 24" style="margin: 0 auto 20px; stroke: var(--muted); stroke-width: 2; fill: none;">
+          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+        <p>У квиза пока нет вопросов</p>
+      </div>
+    {% endif %}
+  </main>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+  <script>
+    document.querySelectorAll('.custom-select').forEach(select => {
+        const trigger = select.querySelector('.custom-select__trigger');
+        const dropdown = select.querySelector('.custom-select__dropdown');
+        const options = select.querySelectorAll('.custom-select__option');
+        const hiddenInput = select.querySelector('input[type="hidden"]');
+        const valueText = select.querySelector('.custom-select__value');
+    
+        trigger.addEventListener('click', () => {
+            select.classList.toggle('open');
+        });
+    
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.dataset.value;
+                const label = option.textContent;
+    
+                hiddenInput.value = value;
+                valueText.textContent = label;
+    
+                select.classList.remove('open');
+            });
+        });
+    
+        document.addEventListener('click', (e) => {
+            if (!select.contains(e.target)) {
+                select.classList.remove('open');
+            }
+        });
+    });
+    </script>
+
+</body>
+</html>

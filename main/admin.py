@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Quiz, Question, Answer, QuizResult, WrongAnswer
+from .models import Quiz, Question, Answer, QuizResult, WrongAnswer, Friendship
 
 
 class AnswerInline(admin.TabularInline):
@@ -19,10 +19,10 @@ class QuestionInline(admin.TabularInline):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ['get_category_display', 'get_question_count', 'is_published']
-    list_filter = ['is_published']
-    search_fields = ['description']
-    list_editable = ['is_published']
+    list_display = ['title', 'author', 'category', 'visibility', 'is_global', 'is_published', 'get_question_count', 'created_at']
+    list_filter = ['category', 'visibility', 'is_published', 'created_at']
+    search_fields = ['title', 'description', 'author__username']
+    list_editable = ['is_published', 'visibility', 'is_global']
     inlines = [QuestionInline]
 
     def get_question_count(self, obj):
@@ -69,3 +69,11 @@ class WrongAnswerAdmin(admin.ModelAdmin):
     list_filter = ['is_repeated', 'answered_at']
     search_fields = ['user__username', 'question__text']
     readonly_fields = ['user', 'question', 'answered_at']
+
+
+@admin.register(Friendship)
+class FriendshipAdmin(admin.ModelAdmin):
+    list_display = ['from_user', 'to_user', 'status', 'created_at', 'accepted_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['from_user__username', 'to_user__username']
+    readonly_fields = ['created_at', 'accepted_at']

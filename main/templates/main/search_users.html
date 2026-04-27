@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск пользователей — Quizora</title>
+  <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+  <link rel="stylesheet" href="{% static 'main/search_users.css' %}">
+</head>
+<body>
+  <!-- Фон -->
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="bg-icons" aria-hidden="true">
+    <!-- мозг -->
+    <svg class="bg-icon bg-icon--brain" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 3.5a3 3 0 0 0-3 3V8a3 3 0 0 0-2 3v1a3 3 0 0 0 1.6 2.7A3 3 0 0 0 7 18v1a3 3 0 0 0 3 3"/>
+      <path d="M15 3.5a3 3 0 0 1 3 3V8a3 3 0 0 1 2 3v1a3 3 0 0 1-1.6 2.7A3 3 0 0 1 17 18v1a3 3 0 0 1-3 3"/>
+      <path d="M12 3.5v18.5"/>
+    </svg>
+
+    <!-- лампочка -->
+    <svg class="bg-icon bg-icon--bulb" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3a6 6 0 0 0-6 6c0 2.1 1 3.5 2 4.5 1 1.1 2 2.2 2 3.5h4c0-1.3 1-2.4 2-3.5 1-1 2-2.4 2-4.5a6 6 0 0 0-6-6Z"/>
+      <path d="M10 18.5h4v2H10Z"/>
+      <path d="M10.5 22h3"/>
+    </svg>
+
+    <!-- знак вопроса -->
+    <svg class="bg-icon bg-icon--question" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9.5 7a2.5 2.5 0 0 1 2.5-2.5 3 3 0 0 1 3 3c0 1.4-.8 2.1-1.7 2.7-.8.5-1.3 1.1-1.3 2.3V14"/>
+      <circle cx="12" cy="18.5" r="1"/>
+    </svg>
+
+    <!-- облако мысли -->
+    <svg class="bg-icon bg-icon--cloud" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M8 18a3 3 0 0 1-.5-6 4 4 0 0 1 7.7-1.5A3 3 0 0 1 15 18H8Z"/>
+      <circle cx="7" cy="20.5" r="0.8"/>
+      <circle cx="5.5" cy="22" r="0.5"/>
+    </svg>
+  </div>
+
+  <!-- Хедер -->
+  <header class="dashboard-header">
+    <div class="brand" aria-label="Quizora">
+      <span class="brand__dot" aria-hidden="true"></span>
+      <a href="{% url 'main:dashboard' %}" class="brand__name brand__name-link">Quizora</a>
+    </div>
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Переключить тему">
+      <span class="theme-toggle__track" aria-hidden="true">
+        <span class="theme-toggle__thumb" aria-hidden="true"></span>
+      </span>
+      <span class="theme-toggle__label" id="themeLabel">Светлая</span>
+    </button>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="search-container">
+    <div class="search-header">
+      <h1 class="search-title">Поиск пользователей</h1>
+      <p class="search-subtitle">Найдите друзей по логину</p>
+    </div>
+
+    <!-- Форма поиска -->
+    <form method="get" action="{% url 'main:search_users' %}" class="search-form">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input 
+          type="text" 
+          name="q" 
+          class="search-input" 
+          placeholder="Введите логин..." 
+          value="{{ query }}"
+          autocomplete="off"
+        >
+      </div>
+      <button type="submit" class="search-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        Найти
+      </button>
+    </form>
+
+    <!-- Результаты поиска -->
+    {% if query %}
+      <div class="search-results">
+        {% if error_message %}
+          <div class="empty-message">
+            <svg width="60" height="60" viewBox="0 0 24 24" style="margin: 0 auto 20px; stroke: var(--muted); stroke-width: 2; fill: none;">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="15" y1="9" x2="9" y2="15"/>
+              <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <p>{{ error_message }}</p>
+            <a href="{% url 'main:search_users' %}" class="search-btn search-btn--secondary">Очистить поиск</a>
+          </div>
+        {% else %}
+          <div class="users-grid">
+            {% for user in users %}
+              <div class="user-card">
+                <div class="user-avatar-large">{{ user.username|slice:":1"|upper }}</div>
+                <div class="user-info">
+                  <h3 class="user-name">{{ user.username }}</h3>
+                  <p class="user-status">Зарегистрирован: {{ user.date_joined|date:"d.m.Y" }}</p>
+                </div>
+                <div class="user-actions">
+                  {% with friendship_status=user.friendship_requests_received.filter(from_user=request.user)|first %}
+                    {% if friendship_status %}
+                      {% if friendship_status.status == 'pending' %}
+                        <button class="action-btn action-btn--pending" disabled>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                          </svg>
+                          Ожидание
+                        </button>
+                      {% elif friendship_status.status == 'accepted' %}
+                        <a href="{% url 'main:remove_friend' user.id %}" class="action-btn action-btn--remove">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                          </svg>
+                          Удалить
+                        </a>
+                      {% else %}
+                        <button class="action-btn action-btn--rejected" disabled>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                          </svg>
+                          Отклонено
+                        </button>
+                      {% endif %}
+                    {% else %}
+                      {% with friendship_sent=user.friendship_requests_sent.filter(to_user=request.user)|first %}
+                        {% if friendship_sent and friendship_sent.status == 'accepted' %}
+                          <a href="{% url 'main:remove_friend' user.id %}" class="action-btn action-btn--remove">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                            Удалить
+                          </a>
+                        {% elif friendship_sent and friendship_sent.status == 'pending' %}
+                          <div class="action-group">
+                            <a href="{% url 'main:accept_friend' friendship_sent.id %}" class="action-btn action-btn--accept">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 6L9 17l-5-5"/>
+                              </svg>
+                              Принять
+                            </a>
+                            <a href="{% url 'main:reject_friend' friendship_sent.id %}" class="action-btn action-btn--reject">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                              </svg>
+                              Отклонить
+                            </a>
+                          </div>
+                        {% else %}
+                          <a href="{% url 'main:add_friend' user.id %}" class="action-btn action-btn--add">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Добавить в друзья
+                          </a>
+                        {% endif %}
+                      {% endwith %}
+                    {% endif %}
+                  {% endwith %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </main>
+
+  <script src="{% static 'main/landing.js' %}" defer></script>
+</body>
+</html>

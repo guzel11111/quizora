@@ -23,23 +23,52 @@ class Quiz(models.Model):
         ('other', 'Другое'),
     ]
 
+    VISIBILITY_CHOICES = [
+        ('public', 'Публичный'),
+        ('friends', 'Только друзьям'),
+        ('private', 'Приватный (по ссылке)'),
+    ]
+
     title = models.CharField('Название', max_length=200)
     description = models.TextField('Описание', blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quizzes', verbose_name='Автор')
-    category = models.CharField('Категория', max_length=20, choices=CATEGORY_CHOICES, default='general', unique=True)
+    category = models.CharField('Категория', max_length=20, choices=CATEGORY_CHOICES, default='general')
+    visibility = models.CharField('Видимость', max_length=10, choices=VISIBILITY_CHOICES, default='public')
+    is_global = models.BooleanField('Глобальный квиз', default=False, help_text='Если включено — квиз появится в общем списке "Начать квиз" (только для админов)')
     is_published = models.BooleanField('Опубликован', default=True)
     created_at = models.DateTimeField('Создан', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлён', auto_now=True)
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
-        ordering = ['category']
+        verbose_name = 'Квиз'
+        verbose_name_plural = 'Квизы'
+        ordering = ['-created_at']
 
     def __str__(self):
-        return self.get_category_display()
+        return self.title
 
     def get_question_count(self):
         return self.questions.count()
+
+    def is_accessible_by(self, user):
+        """Проверяет, доступен ли квиз для пользователя"""
+        if self.visibility == 'public':
+            return True
+        if not user.is_authenticated:
+            return False
+        if self.author == user:
+            return True
+        if self.visibility == 'friends':
+            return Friendship.objects.filter(
+                from_user=self.author,
+                to_user=user,
+                status='accepted'
+            ).exists() or Friendship.objects.filter(
+                from_user=user,
+                to_user=self.author,
+                status='accepted'
+            ).exists()
+        return False
 
 
 class Question(models.Model):
@@ -120,3 +149,38 @@ class WrongAnswer(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.question.text[:30]}"
+
+# ... (предыдущие модели остаются без изменений) ...
+
+class Friendship(models.Model):
+    """Дружба между пользователями"""
+    STATUS_CHOICES = [
+        ('pending', 'Ожидание'),
+        ('accepted', 'Принято'),
+        ('rejected', 'Отклонено'),
+    ]
+
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_requests_sent')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendship_requests_received')
+    status = models.CharField('Статус', max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField('Создано', auto_now_add=True)
+    accepted_at = models.DateTimeField('Принято', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Дружба'
+        verbose_name_plural = 'Дружба'
+        unique_together = ('from_user', 'to_user')
+
+    def __str__(self):
+        return f"{self.from_user.username} → {self.to_user.username} ({self.status})"
+
+    def accept(self):
+        """Принять запрос на дружбу"""
+        self.status = 'accepted'
+        self.accepted_at = timezone.now()
+        self.save()
+
+    def reject(self):
+        """Отклонить запрос на дружбу"""
+        self.status = 'rejected'
+        self.save()

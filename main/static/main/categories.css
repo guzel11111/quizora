@@ -310,3 +310,75 @@ body {
     color: var(--text);
     padding: 4px 8px;
   }
+  /* Кнопка начала */
+.start-section {
+  text-align: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--card-border);
+}
+
+.start-btn {
+  background: linear-gradient(135deg, var(--primary), var(--accent2));
+  color: #0b0614;
+  padding: 16px 48px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  transition: all 180ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(138, 43, 226, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+:root[data-theme="dark"] .start-btn {
+  color: #140b24;
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 300ms ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(138, 43, 226, 0.4);
+}
+
+.start-btn:hover::before {
+  left: 100%;
+}
+
+.start-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(138, 43, 226, 0.3);
+}
+
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.15);
+}
+
+.start-btn:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.15);
+}
+
+.start-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
